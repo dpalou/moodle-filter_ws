@@ -56,8 +56,8 @@ class filter_ws extends moodle_text_filter {
             return $text;
         }
 
-        $search = '/{fws\s+([a-z0-9]+)\s*}(.*?){\s*fws\s*}/is';
-        $result = preg_replace_callback($search, 'self::replace_callback', $text);
+        $search = '/{fws\s+([a-z0-9]+)\s*(?:ua="([^"]+)")?\s*}(.*?){\s*fws\s*}/is';
+        $result = preg_replace_callback($search, array($this, 'replace_callback'), $text);
 
         if (is_null($result)) {
             return $text; // Error during regex processing, keep original text.
@@ -76,11 +76,24 @@ class filter_ws extends moodle_text_filter {
      *                         and the text associated with that condition.
      * @return string
      */
-    static protected function replace_callback($textblock) {
-        $isws = self::is_ws_access();
+    protected function replace_callback($textblock) {
+        $isws = $this->is_ws_access();
 
-        if (($textblock[1] == 'web' && !$isws) || ($textblock[1] == 'ws' && $isws)) {
-            return $textblock[2];
+        // First check that the text should be displayed by this type of access.
+        if ($textblock[1] == 'any' || ($textblock[1] == 'web' && !$isws) || ($textblock[1] == 'ws' && $isws)) {
+
+            // Access is the right one. Check if we should filter the user agent too.
+            if ($textblock[2]) {
+                // Check that the user agent contains the right text.
+                $useragent = core_useragent::get_user_agent_string();
+
+                if (!preg_match('/' . $textblock[2] . '/', $useragent)) {
+                    // The user agent doesn't contain the condition, don't display the contents.
+                    return '';
+                }
+            }
+
+            return $textblock[3];
         }
 
         return '';
@@ -91,7 +104,7 @@ class filter_ws extends moodle_text_filter {
      *
      * @return boolean True if the user is accesing via WS
      */
-    static protected function is_ws_access() {
+    protected function is_ws_access() {
         global $ME;
 
         // First check this global const.
