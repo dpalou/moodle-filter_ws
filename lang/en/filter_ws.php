@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'filter_multilang2', language 'en'
+ * Strings for component 'filter_ws', language 'en'
  *
- * @package    filter_multilang2
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- *             2015 onwards Iñaki Arenaza & Mondragon Unibertsitatea
+ * @package    filter_ws
+ * @copyright  2019 Dani Palou <dani@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
