@@ -118,12 +118,18 @@ class text_filter extends \base_text_filter {
             return true;
         }
 
-        // Check rare cases, like webservice/pluginfile.php.
-        if (strpos($ME, "webservice/") !== false) {
+        // Check file acces via webservice/pluginfile.php.
+        if (strpos($ME, "webservice/pluginfile.php") !== false) {
             $token = optional_param('token', '', PARAM_ALPHANUM);
             if ($token) {
                 return true;
             }
+        }
+
+        // Files can also be accessed using tokenpluginfile.php. This endpoint is used both by LMS and the app, so checking if
+        // it's a WS access it's trickier. Just check if the request comes from the app in that case.
+        if (strpos($ME, "/tokenpluginfile.php") !== false && \core_useragent::is_moodle_app()) {
+            return true;
         }
 
         return false;
