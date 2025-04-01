@@ -91,7 +91,7 @@ class text_filter extends \base_text_filter {
             // Access is the right one. Check if we should filter the user agent too.
             if ($textblock[2]) {
                 // Check that the user agent contains the right text.
-                $useragent = core_useragent::get_user_agent_string();
+                $useragent = \core_useragent::get_user_agent_string();
 
                 if (!preg_match('/' . $textblock[2] . '/', $useragent)) {
                     // The user agent doesn't contain the condition, don't display the contents.

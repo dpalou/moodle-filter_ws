@@ -141,7 +141,7 @@ class filter_ws_testcase extends advanced_testcase {
      */
     public function test_user_agent() {
         // Set a fake user agent.
-        core_useragent::instance(true, 'MyBrowser v42.0.4711');
+        \core_useragent::instance(true, 'MyBrowser v42.0.4711');
 
         // Test a user agent different than the current one.
         $this->assertEquals('', $this->filter->filter('{fws web ua="NotFound"}Some content{fws}'));
